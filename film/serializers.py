@@ -40,3 +40,8 @@ class IzohSerializer(serializers.ModelSerializer):
     class Meta:
         model = Kino
         fields = '__all__'
+
+class IzohCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Izoh
+        fields = '__all__'

@@ -5,7 +5,6 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register("kinolar", KinoViewSet)
-router.register("izohlar", IzohViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -14,5 +13,7 @@ urlpatterns = [
     path('aktors/', AktyorAPIView.as_view()),
     path('tarifs/', TarifAPIView.as_view()),
     path('aktor/<int:pk>/', AktyorDetailView.as_view()),
+    path('izohlar/', IzohAPIView.as_view()),
+    path('izoh_delete/<int:pk>/', IzohDeleteView.as_view()),
     # path('film/<int:pk>/', KinoDetailAPIView.as_view()),
 ]

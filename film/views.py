@@ -1,3 +1,5 @@
+from django.shortcuts import redirect
+from django.views import View
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.permissions import *
@@ -5,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
+from django.contrib.auth.models import *
 
 from .serializers import *
 from .models import *
@@ -108,6 +111,23 @@ class KinoViewSet(ModelViewSet):
         serializer = AktyorSerializer(kino, many=True)
         return Response(serializer.data)
 
-class IzohViewSet(ModelViewSet):
-    queryset = Izoh.objects.all()
-    serializer_class = IzohSerializer
+class IzohAPIView(APIView):
+    def get(self, request):
+        izoh = Izoh.objects.all()
+        serializer = IzohSerializer(izoh)
+        return Response(serializer.data)
+    def post(self, request):
+         izoh = request.data
+         serializer = IzohCreateSerializer(data=izoh)
+         if serializer.is_valid():
+             serializer.save()
+             return Response(serializer.data, status=status.HTTP_201_CREATED)
+         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class IzohDeleteView(View):
+    def get(self, request, pk):
+        to_be_deleted = Izoh.objects.get(id=pk)
+        if to_be_deleted and to_be_deleted.user == request.user:
+            to_be_deleted.delete()
+            return redirect('/izohlar/')
+        return redirect('/izohlar/')
